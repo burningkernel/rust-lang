@@ -1,22 +1,27 @@
 use anyhow::Result;
 use axum::{
-    extract::{Path, Extension},
-    http::{HeaderMap, StatusCode, HeaderValue},
+    extract::{Extension, Path},
+    http::{HeaderMap, HeaderValue, StatusCode},
     routing::get,
     Router,
 };
 use bytes::Bytes;
+use lru::LruCache;
 use percent_encoding::percent_decode_str;
 use serde::Deserialize;
-use tokio::sync::Mutex;
-use lru::LruCache;
 use std::{
-    hash::{Hash, Hasher},
     collections::hash_map::DefaultHasher,
     convert::TryInto,
+    hash::{Hash, Hasher},
+    num::NonZeroUsize,
     sync::Arc,
 };
+use tokio::sync::Mutex;
 mod pb;
+mod engine;
+
+use engine::{Engine, Photon};
+use image::ImageOutputFormat;
 
 use pb::*;
 use tower::ServiceBuilder;
@@ -31,9 +36,10 @@ struct Params {
 
 type Cache = Arc<Mutex<LruCache<u64, Bytes>>>;
 
-async fn generate(Path(Params { spec, url }): Path<Params>, 
-                  Extension(cache): Extension<Cache>,
-                  ) -> Result<(HeaderMap, Vec<u8>), StatusCode> {
+async fn generate(
+    Path(Params { spec, url }): Path<Params>,
+    Extension(cache): Extension<Cache>,
+) -> Result<(HeaderMap, Vec<u8>), StatusCode> {
     let url = percent_decode_str(&url).decode_utf8_lossy();
     let spec: ImageSpec = spec
         .as_str()
@@ -46,10 +52,15 @@ async fn generate(Path(Params { spec, url }): Path<Params>,
         .map_err(|_| StatusCode::BAD_REQUEST)
         .unwrap();
 
+    let mut engine: Photon = data
+        .try_into()
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    engine.apply(&spec.specs);
+    let image = engine.generate(ImageOutputFormat::Jpeg(85));
     let mut headers = HeaderMap::new();
     headers.insert("content-type", HeaderValue::from_static("image/jpeg"));
 
-    Ok((headers, data.to_vec()))
+    Ok((headers, image))
 }
 
 #[instrument(level = "info", skip(cache))]
@@ -77,13 +88,13 @@ async fn retrieve_image(url: &str, cache: Cache) -> Result<Bytes> {
 #[tokio::main]
 async fn main() {
     tracing_subscriber::fmt::init();
-    let cache: Cache = Arc::new(Mutex::new(LruCache::new(1024)));
+    let cache: Cache = Arc::new(Mutex::new(LruCache::new(NonZeroUsize::new(1024).unwrap())));
     let app = Router::new()
         .route("/image/:spec/:url", get(generate))
         .layer(
             ServiceBuilder::new()
-            .layer(AddExtensionLayer::new(cache))
-            .into_inner(),
+                .layer(AddExtensionLayer::new(cache))
+                .into_inner(),
         );
 
     let addr = "0.0.0.0:3016".parse().unwrap();
