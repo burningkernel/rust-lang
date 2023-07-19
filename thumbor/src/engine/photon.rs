@@ -61,13 +61,13 @@ impl SpecTransform<&Contrast> for Photon {
 }
 
 impl SpecTransform<&Flipv> for Photon {
-    fn transform(&mut self, op: &Flipv) {
+    fn transform(&mut self, _op: &Flipv) {
         transform::flipv(&mut self.0)
     }
 }
 
 impl SpecTransform<&Fliph> for Photon {
-    fn transform(&mut self, op: &Fliph) {
+    fn transform(&mut self, _op: &Fliph) {
         transform::fliph(&mut self.0)
     }
 }
@@ -86,13 +86,13 @@ impl SpecTransform<&Resize> for Photon {
     fn transform(&mut self, op: &Resize) {
         let image = match resize::ResizeType::from_i32(op.rtype).unwrap() {
             resize::ResizeType::Normal => transform::resize(
-                &mut self.0,
+                &self.0,
                 op.width,
                 op.height,
                 resize::SampleFilter::from_i32(op.filter).unwrap().into(),
             ),
             resize::ResizeType::SeamCarve => {
-                transform::seam_carve(&mut self.0, op.width, op.height)
+                transform::seam_carve(&self.0, op.width, op.height)
             }
         };
         self.0 = image;
