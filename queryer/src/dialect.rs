@@ -1,9 +1,9 @@
 use sqlparser::dialect::Dialect;
 
 #[derive(Debug, Default)]
-struct TryDialect;
+pub struct TyrDialect;
 
-impl Dialect for TryDialect {
+impl Dialect for TyrDialect {
     fn is_identifier_start(&self, ch: char) -> bool {
         ch.is_ascii_alphabetic() || ch == '_'
     }
@@ -29,6 +29,6 @@ mod tests {
 
     #[test]
     fn it_works() {
-        assert!(Parser::parse_sql(&TryDialect::default(), &example_sql()).is_ok());
+        assert!(Parser::parse_sql(&TyrDialect::default(), &example_sql()).is_ok());
     }
 }

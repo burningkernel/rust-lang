@@ -1,4 +1,7 @@
 mod dialect;
+mod convert;
+
+pub use dialect::TyrDialect;
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right
