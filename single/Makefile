@@ -1,4 +1,10 @@
-all: lifetime
+all: buf_builder
+
+generic_read:
+	rustc $@.rs
+
+buf_builder:
+	rustc $@.rs
 
 lifetime:
 	rustc $@.rs
@@ -16,4 +22,5 @@ vec_stack:
 	rustc $@.rs
 
 clean:
-	rm -rf pointer_test vec_stack r_dag ref_cell lifetime
+	rm -rf pointer_test vec_stack r_dag ref_cell lifetime generic_read \
+		buf_builder
