@@ -1,4 +1,7 @@
-all: buf_builder
+all: animal
+
+animal:
+	rustc $@.rs
 
 generic_read:
 	rustc $@.rs
@@ -23,4 +26,4 @@ vec_stack:
 
 clean:
 	rm -rf pointer_test vec_stack r_dag ref_cell lifetime generic_read \
-		buf_builder
+		buf_builder animal
