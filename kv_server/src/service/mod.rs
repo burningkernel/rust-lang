@@ -53,3 +53,24 @@ pub fn dispatch(cmd: CommandRequest, store: &impl Storage) -> CommandResponse {
         _ => KvError::Internal("Not implemented".into()).into(),
     }
 }
+
+#[cfg(test)]
+use crate::{Kvpair, Value};
+
+#[cfg(test)]
+pub fn assert_res_ok(mut res: CommandResponse, values: &[Value], pairs: &[Kvpair]) {
+
+    res.pairs.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    assert_eq!(res.status, 200);
+    assert_eq!(res.message, "");
+    assert_eq!(res.values, values);
+    assert_eq!(res.pairs, pairs);
+}
+
+#[cfg(test)]
+pub fn assert_res_error(res: CommandResponse, code: u32, msg: &str) {
+    assert_eq!(res.status, code);
+    assert!(res.message.contains(msg));
+    assert_eq!(res.values, &[]);
+    assert_eq!(res.pairs, &[]);
+}

@@ -1,4 +1,5 @@
 /// 来自客户端的请求
+#[derive(PartialOrd)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CommandRequest {
@@ -7,6 +8,7 @@ pub struct CommandRequest {
 }
 /// Nested message and enum types in `CommandRequest`.
 pub mod command_request {
+    #[derive(PartialOrd)]
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum RequestData {
@@ -31,6 +33,7 @@ pub mod command_request {
     }
 }
 /// 来自服务器的响应
+#[derive(PartialOrd)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CommandResponse {
@@ -48,6 +51,7 @@ pub struct CommandResponse {
     pub pairs: ::prost::alloc::vec::Vec<Kvpair>,
 }
 /// 从table中获取一个key，返回
+#[derive(PartialOrd)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Hget {
@@ -57,6 +61,7 @@ pub struct Hget {
     pub key: ::prost::alloc::string::String,
 }
 /// 从table中获取所有的key
+#[derive(PartialOrd)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Hgetall {
@@ -64,6 +69,7 @@ pub struct Hgetall {
     pub table: ::prost::alloc::string::String,
 }
 /// 从table中获取一组key，返回他们的value
+#[derive(PartialOrd)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Hmget {
@@ -73,6 +79,7 @@ pub struct Hmget {
     pub keys: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// 返回值
+#[derive(PartialOrd)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Value {
@@ -81,13 +88,14 @@ pub struct Value {
 }
 /// Nested message and enum types in `Value`.
 pub mod value {
+    #[derive(PartialOrd)]
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Value {
         #[prost(string, tag = "1")]
         String(::prost::alloc::string::String),
         #[prost(bytes, tag = "2")]
-        Binary(::prost::alloc::vec::Vec<u8>),
+        Binary(::prost::bytes::Bytes),
         #[prost(int64, tag = "3")]
         Integer(i64),
         #[prost(double, tag = "4")]
@@ -97,6 +105,7 @@ pub mod value {
     }
 }
 /// 返回的Kvpair
+#[derive(PartialOrd)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Kvpair {
@@ -107,6 +116,7 @@ pub struct Kvpair {
 }
 /// 向table中存一个kvpair
 /// 如果table不存在就创建这个table
+#[derive(PartialOrd)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Hset {
@@ -117,6 +127,7 @@ pub struct Hset {
 }
 /// 往table中存一组 kvpair
 /// 如果table不存在就创建这个table
+#[derive(PartialOrd)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Hmset {
@@ -126,6 +137,7 @@ pub struct Hmset {
     pub pairs: ::prost::alloc::vec::Vec<Kvpair>,
 }
 /// 从table中删除一个key 返回它之前的值
+#[derive(PartialOrd)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Hdel {
@@ -135,6 +147,7 @@ pub struct Hdel {
     pub key: ::prost::alloc::string::String,
 }
 /// 从table中删除一组key，返回他们之前的值
+#[derive(PartialOrd)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Hmdel {
@@ -144,6 +157,7 @@ pub struct Hmdel {
     pub keys: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// 查看key是否存在
+#[derive(PartialOrd)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Hexist {
@@ -153,6 +167,7 @@ pub struct Hexist {
     pub key: ::prost::alloc::string::String,
 }
 /// 查看一组key是否存在
+#[derive(PartialOrd)]
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Hmexist {
