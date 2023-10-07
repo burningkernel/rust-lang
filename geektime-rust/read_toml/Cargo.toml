@@ -1,0 +1,32 @@
+[package]
+name = "read_toml"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[examples]]
+name = "read_toml"
+
+[[examples]]
+name = "read_toml2"
+
+[[examples]]
+name = "toml_async"
+
+[[examples]]
+name = "async_futures"
+
+[[examples]]
+name = "async_mutex"
+
+[[examples]]
+name = "echo_server"
+
+[dependencies]
+anyhow = "1.0.74"
+futures = "0.3.28"
+serde_yaml = "0.9.25"
+tokio = { version = "1.31.0", features = ["full"] }
+tokio-util = { version = "0.7.8", features = ["codec"] }
+toml = "0.7.6"

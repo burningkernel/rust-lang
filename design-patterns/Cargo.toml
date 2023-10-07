@@ -1,0 +1,7 @@
+[workspace]
+
+members = [
+  "chapter_2_1",
+  "command_model",
+  "common",
+]
