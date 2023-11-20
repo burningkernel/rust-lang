@@ -1,4 +1,4 @@
 #!/bin/bash
 
-find ./ -maxdepth 2 -type d -name target -exec rm -rf {} \;
+find ./ -maxdepth 3 -type d -name target -exec rm -rf {} \;
 
