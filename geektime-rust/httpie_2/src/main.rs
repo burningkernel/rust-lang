@@ -80,20 +80,20 @@ struct Post {
 async fn main() -> Result<()>{
     let cli = Cli::parse();
     let client = Client::new();
-    let result = match cli.command {
+    match cli.command {
         Commands::Get(ref args) => {
             get(client, args).await?
         },
         Commands::Post(ref args) => {
             post(client, args).await?
         }
-    };
-    Ok(result)
+    }
+    Ok(())
 }
 
 async fn get(client: Client, args: &Get) -> Result<()> {
     let resp = client.get(&args.url).send().await?;
-    Ok(print_resp(resp).await?)
+    print_resp(resp).await
 }
 
 async fn post(client: Client, args: &Post) -> Result<()> {
@@ -102,7 +102,7 @@ async fn post(client: Client, args: &Post) -> Result<()> {
         body.insert(&pair.k, &pair.v);
     }
     let resp = client.post(&args.url).json(&body).send().await?;
-    Ok(print_resp(resp).await?)
+    print_resp(resp).await
 }
 
 /// 打印服务器版本号 + 状态码
@@ -116,7 +116,7 @@ fn print_headers(resp: &Response) {
     for (name, value) in resp.headers() {
         println!("{}: {:?}", name.to_string().green(), value);
     }
-    print!("\n");
+    println!();
 }
 
 /// 打印服务器返回的body
