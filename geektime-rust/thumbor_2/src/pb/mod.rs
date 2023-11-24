@@ -3,6 +3,7 @@ pub use abi::*;
 use base64::{Engine, engine::{self, general_purpose}, alphabet};
 use prost::Message;
 use photon_rs::transform::SamplingFilter;
+use std::convert::TryFrom;
 
 impl ImageSpec {
     pub fn new(specs: Vec<Spec>) -> Self {
@@ -51,7 +52,25 @@ impl From<resize::SampleFilter> for SamplingFilter {
     fn from(v: resize::SampleFilter) -> Self {
         match v {
             resize::SampleFilter::Undefined => SamplingFilter::Nearest,
+            resize::SampleFilter::Lanczos3 => SamplingFilter::Lanczos3,
+            resize::SampleFilter::Triangle => SamplingFilter::Triangle,
+            resize::SampleFilter::Nearest => SamplingFilter::Nearest,
+            resize::SampleFilter::Gaussian => SamplingFilter::Gaussian,
+            resize::SampleFilter::CatmullRom => SamplingFilter::CatmullRom,
+        }
+    }
+}
 
+// 提供一些辅助函数，让创建一个spec的过程简单一些
+impl Spec {
+    pub fn new_resize_seam_carve(width: u32, height: u32) -> Self {
+        Self {
+            data: Some(spec::Data::Resize(Resize {
+                width,
+                height,
+                rtype: resize::ResizeType::SeamCarve as i32,
+                filter: resize::SampleFilter::Undefined as i32,
+            })),
         }
     }
 }
